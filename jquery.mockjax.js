@@ -299,6 +299,13 @@
 												// jQuery < 1.4 doesn't have onreadystate change for xhr
 												if ( $.isFunction(this.onreadystatechange) ) {
 													this.onreadystatechange( m.isTimeout ? 'timeout' : undefined );
+												} else if ( m.isTimeout ) {
+													if ( $.isFunction( $.handleError ) ) {
+														// Fix for 1.3.2 timeout to keep success from firing.
+														this.readyState = -1;
+													}
+													s.error( this, "timeout" );
+													s.complete( this, "timeout" );
 												}
 											}).apply(that);
 										};
