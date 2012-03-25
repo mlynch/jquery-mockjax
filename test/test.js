@@ -856,6 +856,50 @@ asyncTest('Forcing timeout', function() {
 
 	$.mockjaxClear();
 });
+// FORCE SIMULATION OF SERVER TIMEOUTS
+asyncTest('ifModified test', function() {
+	$.mockjax({
+		url: '/response-callback',
+		responseText: 'done',
+		headers: {
+			'last-modified': '' + new Date(2012, 1, 1)
+		}
+	});
+
+	$.ajax({
+		url: '/response-callback',
+		ifModified: true,
+		error: function(xhr) {
+			ok(false, "error callback was called");
+		},
+		success: function(xhr, response) {
+			ok(true, "should be successful");
+		},
+		complete: function(xhr) {
+			var lastModified = xhr.getResponseHeader('last-modified');
+			console.log(xhr, lastModified);
+			start();
+		}
+	});
+	stop();
+	$.ajax({
+		url: '/response-callback',
+		ifModified: true,
+		error: function(xhr) {
+			ok(true, "error callback was called");
+		},
+		success: function(xhr, response) {
+			ok(false, "should not be successful");
+		},
+		complete: function(xhr) {
+			var lastModified = xhr.getResponseHeader('last-modified');
+			console.log(xhr, lastModified);
+			start();
+		}
+	});
+
+	$.mockjaxClear();
+});
 // DYNAMICALLY GENERATING MOCK DEFINITIONS
 asyncTest('Dynamic mock definition', function() {
 	$.mockjax( function( settings ) {

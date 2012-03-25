@@ -13,7 +13,8 @@
  */
 (function($) {
 	var _ajax = $.ajax,
-		mockHandlers = [];
+		mockHandlers = [],
+		lastModified = {};
 
 	function parseXML(xml) {
 		if ( window['DOMParser'] == undefined && window.ActiveXObject ) {
@@ -285,6 +286,16 @@
 												this.status 		= m.status;
 												this.statusText		= m.statusText;
 												this.readyState 	= 4;
+
+												if( s.ifModified ) {
+													var lastModified = jQuery.lastModified[ m.url ];
+													if ( lastModified && lastModified === m.headers['last-modified'] ) {
+														this.status = 304;
+														s.error( this, "notmodified" );
+														s.complete( this, "notmodified" );
+														return;
+													}
+												}
 
 												// We have an executable function, call it to give
 												// the mock handler a chance to update it's data
