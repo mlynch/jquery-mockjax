@@ -21,7 +21,7 @@ test('Return XMLHttpRequest object from $.ajax', function() {
 	xhr && xhr.abort && xhr.abort();
 
 	ok(xhr, "XHR object is not null or undefined");
-	if (jQuery.Deferred) {
+	if ($.Deferred) {
 		ok(xhr.done && xhr.fail, "Got Promise methods");
 	}
 
@@ -113,7 +113,7 @@ asyncTest('Dynamic response status callback', function() {
 		complete: function(xhr) {
 			equals(xhr.status, 500, 'Dynamically set response status matches');
 
-			if( $.fn.jquery !== '1.5.2') {
+			if ($.fn.jquery !== '1.5.2') {
 				// This assertion fails in 1.5.2 due to this bug: http://bugs.jquery.com/ticket/9854
 				// The statusText is being modified internally by jQuery in 1.5.2
 				equals(xhr.statusText, "Internal Server Error", 'Dynamically set response statusText matches');
@@ -140,7 +140,7 @@ asyncTest('Default Response Settings', function() {
 		complete: function(xhr) {
 			equals(xhr.status, 200, 'Response status matches default');
 
-			if( $.fn.jquery !== '1.5.2') {
+			if ($.fn.jquery !== '1.5.2') {
 				// This assertion fails in 1.5.2 due to this bug: http://bugs.jquery.com/ticket/9854
 				// The statusText is being modified internally by jQuery in 1.5.2
 				equals(xhr.statusText, "OK", 'Response statusText matches default');
@@ -578,8 +578,6 @@ asyncTest('Response returns jsonp', 3, function() {
 
 
 asyncTest('Response returns jsonp and return value from ajax is a promise if supported', function() {
-	window.rquery =  /\?/;
-
 	$.mockjax({
 		url:"http://api*",
 		responseText:{
@@ -595,7 +593,7 @@ asyncTest('Response returns jsonp and return value from ajax is a promise if sup
 		dataType:"jsonp"
 	});
 
-	if (jQuery.Deferred) {
+	if ($.Deferred) {
 		ok(promiseObject.done && promiseObject.fail, "Got Promise methods");
 		promiseObject.then(function(){
 			ok(true, "promise object then is executed");
@@ -629,8 +627,6 @@ asyncTest('Response executes script', function() {
 	$.mockjaxClear();
 });
 asyncTest('Grouping deferred responses, if supported', function() {
-	window.rquery =  /\?/;
-
 	$.mockjax({
 		url:"http://api*",
 		responseText:{
@@ -654,7 +650,7 @@ asyncTest('Grouping deferred responses, if supported', function() {
 		dataType:"jsonp"
 	});
 
-	if (jQuery.Deferred) {
+	if ($.Deferred) {
 		$.when(req1, req2, req3).done(function(a, b, c) {
 			ok(true, "Successfully grouped deferred responses");
 		});
@@ -674,7 +670,7 @@ asyncTest('Response returns parsed XML', function() {
 		url: '/xml',
 		dataType: 'xml',
 		success: function(xmlDom) {
-			ok( jQuery.isXMLDoc( xmlDom ), 'Data returned is an XML DOM');
+			ok( $.isXMLDoc( xmlDom ), 'Data returned is an XML DOM');
 		},
 		error: noErrorCallbackExpected,
 		complete: function(xhr, error) {
